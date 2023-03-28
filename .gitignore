@@ -7,5 +7,5 @@ ENV/
 env.bak/
 venv.bak/
 
-# ifgnore sentry data
-./sentry/data/**
+# ignore sentry data
+/sentry/data/**

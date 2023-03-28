@@ -1,0 +1,80 @@
+version: '3.7'
+
+services:
+  sentry-redis:
+    image: redis:latest
+    container_name: sentry-redis
+    hostname: sentry-redis
+    restart: always
+    networks:
+      - internal
+    volumes:
+      - './sentry/data/redis/data:/data'
+  
+  sentry-postgres:
+    image: postgres:latest
+    container_name: sentry-postgres
+    hostname: sentry-postgres
+    restart: always
+    env_file:
+        - ./envs/postgres/.env
+    networks:
+      - internal
+    volumes:
+      - './sentry/data/postgres:/var/lib/postgresql/data'
+
+  sentry-base:
+    image: sentry:latest
+    container_name: sentry-base
+    hostname: sentry-base
+    restart: always
+    ports:
+      - '9000:9000'
+    env_file:
+      - ./envs/sentry/.env
+    depends_on:
+      - sentry-redis
+      - sentry-postgres
+    networks:
+      - sentry
+      - internal
+    volumes:
+      - './sentry/data/sentry:/var/lib/sentry/files'
+
+  sentry-cron:
+    image: sentry:latest
+    container_name: sentry-cron
+    hostname: sentry-cron
+    restart: always
+    env_file:
+      - ./envs/sentry/.env
+    depends_on:
+      - sentry-redis
+      - sentry-postgres
+    command: "sentry run cron"
+    networks:
+      - internal
+    volumes:
+      - './sentry/data/sentry:/var/lib/sentry/files'
+
+  sentry-worker:
+    image: sentry:latest
+    container_name: sentry-worker
+    hostname: sentry-worker
+    restart: always
+    env_file:
+      - ./envs/sentry/.env
+    depends_on:
+      - sentry-redis
+      - sentry-postgres
+    command: "sentry run worker"
+    networks:
+      - internal
+    volumes:
+      - './sentry/data/sentry:/var/lib/sentry/files'
+
+
+networks:
+  sentry:
+    name: sentry
+  internal:

@@ -48,8 +48,8 @@ services:
     env_file:
       - ./envs/nginx/.env
     ports:
-      - 9001:443
-      - 9000:80
+      - 9001:9001
+      - 9000:9000
     volumes:
       - certbot_www_volume:/vol/www/
       - proxy_dhparams:/vol/proxy

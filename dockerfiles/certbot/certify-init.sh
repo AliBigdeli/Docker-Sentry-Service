@@ -4,7 +4,7 @@
 
 set -e
 
-until nc -z sentry-nginx 9000; do
+until nc -z sentry-nginx 80; do
     echo "Waiting for proxy..."
     sleep 5s & wait ${!}
 done

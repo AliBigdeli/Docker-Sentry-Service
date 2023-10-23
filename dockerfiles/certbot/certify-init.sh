@@ -14,6 +14,7 @@ echo "Getting certificate..."
 certbot certonly \
     --webroot \
     -w "/vol/www/" \
+    --http-01-port 9000 \
     -d "$DOMAIN" \
     --email $EMAIL \
     --force-renewal \

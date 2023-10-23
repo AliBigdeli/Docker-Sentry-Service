@@ -23,13 +23,51 @@ services:
     volumes:
       - './sentry/data/postgres:/var/lib/postgresql/data'
 
+  sentry-certbot:
+    container_name: sentry-certbot
+    build: 
+      context: ./dockerfiles/certbot/
+    command: echo "Skipping..."
+    env_file:
+      - ./envs/nginx/.env
+    volumes: 
+      - certbot_www_volume:/vol/www/
+      - certbot_certs_volume:/etc/letsencrypt/
+    depends_on:
+      - sentry-nginx
+    networks:
+      - sentry
+      - internal
+
+  sentry-nginx:
+    container_name: sentry-nginx
+    build:
+      context: .
+      dockerfile: ./dockerfiles/nginx/Dockerfile
+    restart: always
+    env_file:
+      - ./envs/nginx/.env
+    ports:
+      - 9001:443
+      - 9000:80
+    volumes:
+      - certbot_www_volume:/vol/www/
+      - proxy_dhparams:/vol/proxy
+      - certbot_certs_volume:/etc/letsencrypt/
+      - ./dockerfiles/nginx/config:/etc/nginx/templates
+    depends_on:
+      - sentry-base
+    networks:
+      - sentry
+      - internal
+
   sentry-base:
     image: sentry:latest
     container_name: sentry-base
     hostname: sentry-base
     restart: always
-    ports:
-      - '9000:9000'
+    expose:
+      - 9000
     env_file:
       - ./envs/sentry/.env
     depends_on:
@@ -78,3 +116,9 @@ networks:
   sentry:
     name: sentry
   internal:
+
+
+volumes:
+  certbot_www_volume:
+  certbot_certs_volume:
+  proxy_dhparams:

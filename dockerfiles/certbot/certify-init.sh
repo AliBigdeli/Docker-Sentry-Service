@@ -12,7 +12,8 @@ done
 echo "Getting certificate..."
 
 certbot certonly \
-    --webroot \
+    --standalone \
+    --preferred-challenges http \
     -w "/vol/www/" \
     --http-01-port 9000 \
     -d "$DOMAIN" \

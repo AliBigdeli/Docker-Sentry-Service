@@ -12,8 +12,7 @@ done
 echo "Getting certificate..."
 
 certbot certonly \
-    --standalone \
-    --preferred-challenges http \
+    --webroot \
     -w "/vol/www/" \
     --http-01-port 9000 \
     -d "$DOMAIN" \
@@ -21,4 +20,5 @@ certbot certonly \
     --force-renewal \
     --rsa-key-size 4096 \
     --agree-tos \
-    --noninteractive
+    --noninteractive \
+    -v

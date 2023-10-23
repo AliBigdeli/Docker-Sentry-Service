@@ -59,7 +59,7 @@ server {
         root /var/www/certbot;
     }
 
-    location /sentry {        
+    location / {        
         try_files $uri @proxy_api;
     }
 

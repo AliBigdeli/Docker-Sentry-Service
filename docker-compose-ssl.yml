@@ -35,6 +35,8 @@ services:
       - certbot_certs_volume:/etc/letsencrypt/
     depends_on:
       - sentry-nginx
+    ports:
+      - 9002:9002
     networks:
       - sentry
       - internal

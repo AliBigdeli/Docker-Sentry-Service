@@ -13,6 +13,7 @@ echo "Getting certificate..."
 
 certbot certonly \
     --standalone \
+    --preferred-challenges http \
     --http-01-port 9002 \
     -d "$DOMAIN" \
     --email $EMAIL \

@@ -36,7 +36,7 @@ services:
     depends_on:
       - sentry-nginx
     ports:
-      - 9002:9002
+      - 80:80
     networks:
       - sentry
       - internal

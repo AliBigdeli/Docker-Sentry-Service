@@ -35,8 +35,6 @@ services:
       - certbot_certs_volume:/etc/letsencrypt/
     depends_on:
       - sentry-nginx
-    ports:
-      - 80:80
     networks:
       - sentry
       - internal
@@ -50,8 +48,8 @@ services:
     env_file:
       - ./envs/nginx/.env
     ports:
-      - 9001:9001
-      - 9000:9000
+      - 443:443
+      - 80:80
     volumes:
       - certbot_www_volume:/vol/www/
       - proxy_dhparams:/vol/proxy

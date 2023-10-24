@@ -4,7 +4,7 @@
 
 set -e
 
-until nc -z sentry-nginx 9000; do
+until nc -z nginx 80; do
     echo "Waiting for proxy..."
     sleep 5s & wait ${!}
 done
@@ -12,13 +12,11 @@ done
 echo "Getting certificate..."
 
 certbot certonly \
-    --standalone \
-    --preferred-challenges http \
-    --http-01-port 80 \
+    --webroot \
+    -w "/vol/www/" \
     -d "$DOMAIN" \
     --email $EMAIL \
     --force-renewal \
     --rsa-key-size 4096 \
     --agree-tos \
-    --noninteractive \
-    -v
+    --noninteractive
